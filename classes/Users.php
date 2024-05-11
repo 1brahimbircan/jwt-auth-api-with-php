@@ -16,6 +16,7 @@ class Users{
     }
 
     public function create_user(){
+        
         $user_query = "INSERT INTO " . $this->users_table . " SET name = ? , email = ? , password = ? , created_at = now()";
 
         $user_obj = $this->conn->prepare($user_query);
@@ -29,6 +30,7 @@ class Users{
     }
 
     public function check_email(){
+
         $email_query = "SELECT * FROM " . $this->users_table . " WHERE email = ?";
 
         $user_obj =  $this->conn->prepare($email_query);
@@ -42,6 +44,24 @@ class Users{
 
         return array();
     }
+
+    public function check_login(){
+
+        $email_query = "SELECT * from ".$this->users_table." WHERE email = ?";
+    
+        $user_obj = $this->conn->prepare($email_query);
+    
+        $user_obj->bind_param("s", $this->email);
+    
+        if($user_obj->execute()){
+    
+           $data = $user_obj->get_result();
+    
+           return $data->fetch_assoc();
+        }
+    
+        return array();
+      }
 
 }
 
