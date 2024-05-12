@@ -72,4 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             "message" => "All data needed"
         ));
     }
+}else {
+    http_response_code(503);
+    echo json_encode(array(
+        "status" => 0,
+        "message" => "Access Denied"
+    ));
 }
