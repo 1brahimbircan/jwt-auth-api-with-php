@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             // Secret key
             $secret_key = "qwe1234";
             // Token'ı doğrula
-            $payload = $user_obj->verify_token($token, "q");
+            $payload = $user_obj->verify_token($token, $secret_key);
 
             // Eğer token geçerli değilse veya bir hata varsa
             if (!$payload) {
