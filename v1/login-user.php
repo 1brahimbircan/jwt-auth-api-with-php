@@ -21,18 +21,21 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     $data = json_decode(file_get_contents("php://input"));
 
+    // Check if the data is not empty
     if (!empty($data->email) && !empty($data->password)) {
 
         $user_obj->email = $data->email;
 
         $user_data = $user_obj->check_login();
 
+        // If the user is not empty
         if (!empty($user_data)) {
 
             $name = $user_data['name'];
             $email = $user_data['email'];
             $password = $user_data['password'];
 
+            // Check if the password is correct
             if (password_verify($data->password, $password)) {
 
                 $secret_key = "qwe1234";
@@ -49,21 +52,21 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                     "message" => "User logged in successfully",
                     "token" => $token
                 ));
-            } else {
+            } else { // If the password is incorrect
                 http_response_code(404);
                 echo json_encode(array(
                     "status" => 0,
                     "message" => "Invalid credentials"
                 ));
             }
-        } else {
+        } else { // If the user is empty
             http_response_code(404);
             echo json_encode(array(
                 "status" => 0,
                 "message" => "Invalid credentials"
             ));
         }
-    } else {
+    } else { // If the data is empty
         http_response_code(404);
         echo json_encode(array(
             "status" => 0,

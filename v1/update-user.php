@@ -21,51 +21,53 @@ if ($_SERVER['REQUEST_METHOD'] === "PATCH") {
 
     $data = json_decode(file_get_contents("php://input"));
 
+    // Check if the data is not empty
     if (!empty($data->name) && !empty($data->email) && !empty($data->password)) {
 
         $user_obj->name = $data->name;
         $user_obj->email = $data->email;
         $user_obj->password = password_hash($data->password, PASSWORD_DEFAULT);
 
-        // Token'ı al
+        //get token
         $headers = apache_request_headers();
         $token = $headers['Authorization'];
         // Secret key
         $secret_key = "qwe1234";
-        // Token'ı doğrula
+        // Verify token
         $payload = $user_obj->verify_token($token, $secret_key);
-    
-        // Eğer token geçerli değilse veya bir hata varsa
+
+        // If the token is not valid or there is an error
         if (!$payload) {
             http_response_code(404);
             echo json_encode(array(
                 "status" => 0,
                 "message" => "Invalid token"
             ));
-            exit(); // İşlemi sonlandır
+            exit(); // End process
         }
 
+        // If the user is updated
         if ($user_obj->update_user($payload['id'])) {
             http_response_code(200);
             echo json_encode(array(
                 "status" => 1,
                 "message" => "User update successful"
             ));
-        } else {
+        } else { // If the user is not updated
             http_response_code(500);
             echo json_encode(array(
                 "status" => 0,
                 "message" => "Failed to update user"
             ));
         }
-    } else {
+    } else { // If the data is empty
         http_response_code(500);
         echo json_encode(array(
             "status" => 0,
             "message" => "All data needed"
         ));
     }
-} else {
+} else { // If the request method is not PATCH
     http_response_code(503);
     echo json_encode(array(
         "status" => 0,

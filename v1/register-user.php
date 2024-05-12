@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     $data = json_decode(file_get_contents("php://input"));
 
+    // Check if the data is not empty
     if (!empty($data->name) && !empty($data->email) && !empty($data->password)) {
 
         $user_obj->name = $data->name;
@@ -28,20 +29,22 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
         $email_data = $user_obj->check_email();
 
+        // If the email is not empty
         if (!empty($email_data)) {
             http_response_code(500);
             echo json_encode(array(
                 "status" => 0,
                 "message" => "User already exists, try another email address"
             ));
-        } else {
+        } else { // If the email is empty
+            // If the user is created
             if ($user_obj->create_user()) {
                 http_response_code(200);
                 echo json_encode(array(
                     "status" => 1,
                     "message" => "User has been registered successfully"
                 ));
-            } else {
+            } else {// If the user is not created
                 http_response_code(500);
                 echo json_encode(array(
                     "status" => 0,
@@ -49,14 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 ));
             }
         }
-    } else {
+    } else { // If the data is empty
         http_response_code(500);
         echo json_encode(array(
             "status" => 0,
             "message" => "All data needed"
         ));
     }
-} else {
+} else { // If the request method is not POST
     http_response_code(503);
     echo json_encode(array(
         "status" => 0,

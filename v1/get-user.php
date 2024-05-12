@@ -21,31 +21,34 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     $data = json_decode(file_get_contents("php://input"));
 
+    // Check if the data is not empty
     if (!empty($data->email)) {
 
         $user_obj->email = $data->email;
 
         $user_data = $user_obj->get_user_by_email();
 
+        // If the user is not empty
         if (!empty($user_data)) {
 
-            // Token'ı al
+            //get token
             $headers = apache_request_headers();
             $token = $headers['Authorization'];
             // Secret key
             $secret_key = "qwe1234";
-            // Token'ı doğrula
+            // Verify token
             $payload = $user_obj->verify_token($token, $secret_key);
 
-            // Eğer token geçerli değilse veya bir hata varsa
+            // If the token is not valid or there is an error
             if (!$payload) {
                 http_response_code(404);
                 echo json_encode(array(
                     "status" => 0,
                     "message" => "Invalid token"
                 ));
-                exit(); // İşlemi sonlandır
+                exit(); // End process
             }
+
             $user_arr_data = array(
                 "id" => $user_data['id'],
                 "name" => $user_data['name'],
@@ -58,21 +61,21 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 "message" => "Get User successfully",
                 "user" => $user_arr_data
             ));
-        } else {
+        } else { // If the user is empty
             http_response_code(404);
             echo json_encode(array(
                 "status" => 0,
                 "message" => "Invalid user"
             ));
         }
-    } else {
+    } else { // If the data is empty
         http_response_code(404);
         echo json_encode(array(
             "status" => 0,
             "message" => "All data needed"
         ));
     }
-}else {
+} else { // If the request method is not POST
     http_response_code(503);
     echo json_encode(array(
         "status" => 0,

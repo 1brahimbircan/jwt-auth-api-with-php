@@ -17,6 +17,7 @@ class Users
         $this->users_table = "kullanicilar";
     }
 
+    // Create user
     public function create_user()
     {
 
@@ -32,6 +33,7 @@ class Users
         return false;
     }
 
+    // Check email
     public function check_email()
     {
 
@@ -49,6 +51,7 @@ class Users
         return array();
     }
 
+    // Check login
     public function check_login()
     {
 
@@ -68,6 +71,7 @@ class Users
         return array();
     }
 
+    // Verify token
     public function verify_token($token, $secret_key)
     {
         $token = substr($token, 7); // Remove bearer
@@ -79,6 +83,7 @@ class Users
         }
     }
 
+    // Get user by email
     public function get_user_by_email()
     {
         $email_query = "SELECT * from " . $this->users_table . " WHERE email = ?";
@@ -97,17 +102,33 @@ class Users
         return array();
     }
 
+    // Update user
     public function update_user($id)
     {
-        // Güncellenecek kullanıcının bilgilerini al
+     
         $user_query = "UPDATE " . $this->users_table . " SET name = ?, email = ?, password = ? WHERE id = ?";
 
         $user_obj = $this->conn->prepare($user_query);
 
-        // Yeni değerleri bağla
+ 
         $user_obj->bind_param("sssi", $this->name, $this->email, $this->password, $id);
 
-        // Sorguyu çalıştır
+        
+        if ($user_obj->execute()) {
+            return true;
+        }
+        return false;
+    }
+
+    // Delete user
+    public function delete_user($id)
+    {
+        $user_query = "DELETE FROM " . $this->users_table . " WHERE id = ?";
+
+        $user_obj = $this->conn->prepare($user_query);
+
+        $user_obj->bind_param("i", $id);
+
         if ($user_obj->execute()) {
             return true;
         }
