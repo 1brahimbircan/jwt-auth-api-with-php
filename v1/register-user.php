@@ -10,6 +10,7 @@ header("Content-Type: application/json; charset=UTF-8");
 //include files
 include_once("../config/database.php");
 include_once("../classes/Users.php");
+include_once("../jwt/token.php");
 
 //objects
 $db = new Database();
@@ -39,10 +40,20 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         } else { // If the email is empty
             // If the user is created
             if ($user_obj->create_user()) {
+
+                $secret_key = "qwe1234";
+                $user_arr_data = array(
+                    "name" => $user_obj->name,
+                    "email" => $user_obj->email
+                );
+                $token = Token::Sign($user_arr_data, $secret_key, 60);
+
                 http_response_code(200);
                 echo json_encode(array(
                     "status" => 1,
-                    "message" => "User has been registered successfully"
+                    "message" => "User has been registered successfully",
+                    "user" => $user_arr_data,
+                    "token" => $token
                 ));
             } else {// If the user is not created
                 http_response_code(500);

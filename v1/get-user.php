@@ -36,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
         exit(); // End process
     }
 
+    $token = substr($token, 7);
     $user_arr_data = array(
-        "id" => $payload['id'],
         "name" => $payload['name'],
         "email" => $payload['email']
     );
@@ -46,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
     echo json_encode(array(
         "status" => 1,
         "message" => "Get User successfully",
-        "data" => $user_arr_data
+        "user" => $user_arr_data,
+        "token" => $token
     ));
 
 } else { // If the request method is not POST

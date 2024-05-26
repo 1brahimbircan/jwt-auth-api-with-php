@@ -40,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
                 $secret_key = "qwe1234";
                 $user_arr_data = array(
-                    "id" => $user_data['id'],
                     "name" => $user_data['name'],
                     "email" => $user_data['email']
                 );
@@ -50,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 echo json_encode(array(
                     "status" => 1,
                     "message" => "User logged in successfully",
+                    "user" => $user_arr_data,
                     "token" => $token
                 ));
             } else { // If the password is incorrect
@@ -74,3 +74,4 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         ));
     }
 }
+?>
