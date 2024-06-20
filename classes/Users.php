@@ -3,6 +3,7 @@
 class Users
 {
 
+    public $user_id;
     public $name;
     public $email;
     public $password;
@@ -20,12 +21,11 @@ class Users
     // Create user
     public function create_user()
     {
-
-        $user_query = "INSERT INTO " . $this->users_table . " SET name = ? , email = ? , password = ? , created_at = now()";
+        $user_query = "INSERT INTO " . $this->users_table . " SET user_id = ? , name = ? , email = ? , password = ? , created_at = now()";
 
         $user_obj = $this->conn->prepare($user_query);
 
-        $user_obj->bind_param("sss", $this->name, $this->email, $this->password);
+        $user_obj->bind_param("ssss", $this->user_id ,$this->name, $this->email, $this->password);
 
         if ($user_obj->execute()) {
             return true;
@@ -36,7 +36,6 @@ class Users
     // Check email
     public function check_email()
     {
-
         $email_query = "SELECT * FROM " . $this->users_table . " WHERE email = ?";
 
         $user_obj =  $this->conn->prepare($email_query);
@@ -45,26 +44,6 @@ class Users
 
         if ($user_obj->execute()) {
             $data = $user_obj->get_result();
-            return $data->fetch_assoc();
-        }
-
-        return array();
-    }
-
-    // Check login
-    public function check_login()
-    {
-
-        $email_query = "SELECT * from " . $this->users_table . " WHERE email = ?";
-
-        $user_obj = $this->conn->prepare($email_query);
-
-        $user_obj->bind_param("s", $this->email);
-
-        if ($user_obj->execute()) {
-
-            $data = $user_obj->get_result();
-
             return $data->fetch_assoc();
         }
 
@@ -83,35 +62,16 @@ class Users
         }
     }
 
-    // Get user by email
-    public function get_user_by_email()
-    {
-        $email_query = "SELECT * from " . $this->users_table . " WHERE email = ?";
-
-        $user_obj = $this->conn->prepare($email_query);
-
-        $user_obj->bind_param("s", $this->email);
-
-        if ($user_obj->execute()) {
-
-            $data = $user_obj->get_result();
-
-            return $data->fetch_assoc();
-        }
-
-        return array();
-    }
-
     // Update user
-    public function update_user($id)
+    public function update_user($userId)
     {
      
-        $user_query = "UPDATE " . $this->users_table . " SET name = ?, email = ?, password = ? WHERE id = ?";
+        $user_query = "UPDATE " . $this->users_table . " SET name = ?, email = ?, password = ? WHERE user_id = ?";
 
         $user_obj = $this->conn->prepare($user_query);
 
  
-        $user_obj->bind_param("sssi", $this->name, $this->email, $this->password, $id);
+        $user_obj->bind_param("ssss", $this->name, $this->email, $this->password, $userId);
 
         
         if ($user_obj->execute()) {
@@ -121,13 +81,13 @@ class Users
     }
 
     // Delete user
-    public function delete_user($id)
+    public function delete_user($userId)
     {
-        $user_query = "DELETE FROM " . $this->users_table . " WHERE id = ?";
+        $user_query = "DELETE FROM " . $this->users_table . " WHERE user_id = ?";
 
         $user_obj = $this->conn->prepare($user_query);
 
-        $user_obj->bind_param("i", $id);
+        $user_obj->bind_param("s", $userId);
 
         if ($user_obj->execute()) {
             return true;

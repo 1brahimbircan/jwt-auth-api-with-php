@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
 
     $token = substr($token, 7);
     $user_arr_data = array(
+        "userId" => $payload['userId'],
         "name" => $payload['name'],
         "email" => $payload['email']
     );

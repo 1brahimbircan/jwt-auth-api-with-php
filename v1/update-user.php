@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === "PATCH") {
         }
 
         // If the user is updated
-        if ($user_obj->update_user($payload['id'])) {
+        if ($user_obj->update_user($payload['userId'])) {
             http_response_code(200);
             echo json_encode(array(
                 "status" => 1,

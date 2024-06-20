@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
         $user_obj->name = $data->name;
         $user_obj->email = $data->email;
+        $user_obj->user_id = uniqid('', true);
         $user_obj->password = password_hash($data->password, PASSWORD_DEFAULT);
 
         $email_data = $user_obj->check_email();
@@ -43,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
                 $secret_key = "qwe1234";
                 $user_arr_data = array(
+                    "userId" => $user_obj->user_id,
                     "name" => $user_obj->name,
                     "email" => $user_obj->email
                 );

@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === "DELETE") {
     }
 
     // If the user is deleted
-    if ($user_obj->delete_user($payload['id'])) {
+    if ($user_obj->delete_user($payload['userId'])) {
         http_response_code(200);
         echo json_encode(array(
             "status" => 1,

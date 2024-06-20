@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
         $user_obj->email = $data->email;
 
-        $user_data = $user_obj->check_login();
+        $user_data = $user_obj->check_email();
 
         // If the user is not empty
         if (!empty($user_data)) {
@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
                 $secret_key = "qwe1234";
                 $user_arr_data = array(
+                    "userId" => $user_data['user_id'],
                     "name" => $user_data['name'],
                     "email" => $user_data['email']
                 );
